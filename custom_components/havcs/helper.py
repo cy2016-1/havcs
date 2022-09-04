@@ -142,7 +142,9 @@ class VoiceControlProcessor:
                     else:
                         service_list[0] = translation
                 else:
-                    service_list[0] = self._prase_action_p2h(action)
+                    _LOGGER.error("[%s] unknow action in while handling request: %s", LOGGER_NAME, action)
+                    return self._errorResult('INVALIDATE_CONTROL_ORDER'), None
+                    # service_list[0] = self._prase_action_p2h(action)
 
                 _LOGGER.debug("[%s] ---excute tasks of %s: start", LOGGER_NAME, entity_id)
                 for i in range(len(domain_list)):
@@ -167,7 +169,7 @@ class VoiceControlProcessor:
             _LOGGER.debug("[%s] fail to control device, return 'IOT_DEVICE_OFFLINE' message.", LOGGER_NAME)
             return self._errorResult('IOT_DEVICE_OFFLINE'), None
         # wait 1s for updating state of entity
-        await asyncio.sleep(1)
+        # await asyncio.sleep(1)
         device_properties = self.vcdm.get(device_id).properties
         properties = self._control_process_propertites(device_properties, action)
         return None, properties
